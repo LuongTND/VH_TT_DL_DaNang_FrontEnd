@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import LandingPage from "./landingPage/page";
-
 
 export const metadata: Metadata = {
   title: "Workshop",
   description: "Workshop",
 };
 
-export default function RootLayout() {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="vi" className="w-full h-full">
       <body className='w-full h-full'>
-        <LandingPage />
+        {children}
       </body>
     </html>
   );

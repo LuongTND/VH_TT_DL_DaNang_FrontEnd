@@ -1,62 +1,95 @@
-# 🧩 Workshop Booking Frontend (Next.js + App Router + Kiến trúc sạch)
+# VH_TT_DL_DaNang_FrontEnd
 
-Dự án giao diện frontend sử dụng **Next.js 14 (App Router)**, kết hợp với **TailwindCSS**, viết bằng **TypeScript**, tổ chức theo mô hình **kiến trúc module sạch (clean structure)**.
+Ứng dụng Next.js cho hệ thống quản lý workshop.
 
-Phù hợp để phát triển các hệ thống đặt lịch, đăng ký workshop, dashboard quản trị hoặc các ứng dụng SaaS hiện đại.
+## 🚀 **Cài đặt và chạy**
 
----
+### **Development Mode**
+```bash
+npm install
+npm run dev
+```
 
-## 📦 Công nghệ sử dụng
+### **Production Mode**
+```bash
+npm install
+npm run build
+npm start
+```
 
-- ✅ **Next.js 14** (App Router, TypeScript, Server/Client Components)
-- ✅ **TailwindCSS** – thiết kế giao diện linh hoạt
-- ✅ **Kiến trúc module sạch** – dễ scale, dễ bảo trì
-- ✅ **Hỗ trợ gọi API với Axios hoặc Fetch**
-- ✅ **Component & Hook tái sử dụng**
-- ✅ Hỗ trợ mở rộng thêm: `react-hook-form`, `zod`, `shadcn/ui`, `SWR`, `react-query`...
+## 🐳 **Docker Commands**
 
----
+### **1. Build Docker Image**
+```bash
+# Build image với tên tag
+docker build -t vh-tt-danang-frontend .
 
-## 📁 Cấu trúc thư mục
-
-src/
-├── app/ # Router chính theo App Router
-│ ├── layout.tsx # Layout tổng
-│ ├── page.tsx # Trang chủ
-│ └── booking/ # Trang booking
-├── components/ # Các UI component tái sử dụng
-├── constants/ # Hằng số toàn cục, enum,...
-├── hooks/ # Custom React Hooks
-├── layouts/ # Các layout dùng riêng (admin, auth, ...)
-├── lib/ # Hàm tiện ích (utils)
-├── services/ # Giao tiếp backend (axios, fetch)
-├── styles/ # TailwindCSS & global.css
-├── types/ # Định nghĩa kiểu dữ liệu (interface, type)
+### **2. Chạy Container**
+```bash
+# Chạy container với port mapping
+docker run -p 3000:3000 vh-tt-danang-frontend
 
 
----
+###. Docker Compose (Khuyến nghị)
+```bash
+# Build và chạy với docker-compose
+docker-compose up --build
 
-## 🚀 Khởi động dự án
+# Chạy ở background
+docker-compose up -d
+
+# Dừng services
+docker-compose down
+
+# Xem logs
+docker-compose logs -f
+```
+
+## 🛠️ **Technologies**
+
+- **Next.js 15.4.4** - React Framework
+- **React 19.1.0** - UI Library
+- **TypeScript** - Type Safety
+- **Tailwind CSS v4** - Styling
+- **Ant Design** - UI Components
+- **Docker** - Containerization
+
+## 🌐 **Access URLs**
+
+- **Development**: http://localhost:3000
+- **Production**: http://localhost:3000 (sau khi chạy Docker)
+
+## 📝 **Scripts**
 
 ```bash
-# Cài đặt thư viện
-npm install
+npm run dev      # Development server
+npm run build    # Build production
+npm run start    # Start production server
+npm run lint     # Lint code
+```
 
-# Chạy chế độ development
-npm run dev
+## 🔧 **Troubleshooting**
 
-# Build production
-npm run build
-Sau đó truy cập tại: http://localhost:3000
+### **Lỗi Docker Build**
+```bash
+# Xóa cache và build lại
+docker build --no-cache -t vh-tt-danang-frontend .
+docker-compose up --build
+# Xóa tất cả containers và images
+docker system prune -a
+```
 
+### **Lỗi Port đã được sử dụng**
+```bash
+# Tìm process đang sử dụng port 3000
+netstat -ano | findstr :3000
 
-⚙️ Biến môi trường .env.local
-Tạo file .env.local tại thư mục gốc với nội dung:
+# Kill process
+taskkill /PID <process_id> /F
+```
 
-env
-Copy
-Edit
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
-Dùng để định nghĩa URL gọi đến backend NestJS.
-
-Phát triển bởi ❤️ Vantu.dev
+### **Lỗi Permission**
+```bash
+# Chạy với quyền admin (Windows)
+# Mở Command Prompt as Administrator
+```

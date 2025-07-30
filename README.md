@@ -74,7 +74,7 @@ npm run lint     # Lint code
 ```bash
 # Xóa cache và build lại
 docker build --no-cache -t vh-tt-danang-frontend .
-
+docker-compose up --build
 # Xóa tất cả containers và images
 docker system prune -a
 ```

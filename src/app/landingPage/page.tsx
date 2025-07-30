@@ -7,7 +7,20 @@ import { useRouter } from 'next/navigation';
 import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 
+
 const { Header, Content, Footer } = Layout;
+const buttonStyle = {
+  backgroundColor: '#000',
+  color: '#fff',
+  borderRadius: '10px',
+  padding: '10px 20px',
+  fontSize: '16px',
+  '&:hover': {
+    backgroundColor: '#000',
+    color: '#fff',
+  }
+
+}
 
 const LandingPage: React.FC = () => {
   const {
@@ -50,6 +63,7 @@ const LandingPage: React.FC = () => {
               type={item.key === '1' ? 'primary' : 'default'}
               onClick={() => router.push(item.path)}
               className="font-medium"
+              style={buttonStyle}
             >
               {item.icon}
               {item.label}
@@ -59,7 +73,7 @@ const LandingPage: React.FC = () => {
           
           </div>
           <div>
-          <Button type="primary" onClick={() => router.push('/login')} className='bg-blue-500 hover:bg-blue-600'>
+          <Button type="primary" onClick={() => router.push('/login')} className='bg-blue-500 hover:bg-blue-600' style={buttonStyle}>
             <LoginOutlined />
             Đăng Nhập
           </Button>

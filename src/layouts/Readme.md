@@ -108,14 +108,7 @@ const DashboardPage = () => {
   );
 };
 
-const LoginPage = () => {
-  return (
-    <AuthLayout title="Đăng nhập" subtitle="Vui lòng đăng nhập để tiếp tục">
-      <LoginForm />
-    </AuthLayout>
-  );
-};
-```
+
 
 ## 📝 Quy ước đặt tên
 

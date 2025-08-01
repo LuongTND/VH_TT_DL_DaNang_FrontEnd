@@ -13,7 +13,17 @@ export default function RegisterForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
 
-  const handleRegister = async (values: any) => {
+  interface RegisterFormValues {
+    email: string;
+    password: string;
+    nation: string;
+    businessName: string;
+    industry: string;
+    contactMethod: string;
+    contactAccount: string;
+  }
+
+  const handleRegister = async (values: RegisterFormValues) => {
     const payload = {
       email: values.email,
       password: values.password,
@@ -30,22 +40,27 @@ export default function RegisterForm() {
 
     try {
       const response = await register(payload);
-      if (response.success) {
-        setEmail(values.email); // lưu để xác minh OTP
-        setIsModalOpen(true);
-      }
+      console.log('Đăng ký response:', response);
+      setEmail(values.email); // lưu để xác minh OTP
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error registering user:', error);
     }
   };
 
-  const handleVerifyEmail = async (values: any) => {
+  interface VerifyEmailValues {
+    otp: string;
+  }
+
+  const handleVerifyEmail = async (values: VerifyEmailValues) => {
     try {
-      const response = await verifyEmail({ email, otp: values.otp });
-      if (response.success) {
-        setIsModalOpen(false);
-        router.push('/login');
-      }
+      console.log('Xác thực OTP với:', { email, otpCode: values.otp });
+      const response = await verifyEmail({ email, otpCode: values.otp });
+      console.log('Kết quả xác thực:', response);
+      
+      // Không cần kiểm tra response.success nữa
+      setIsModalOpen(false);
+      router.push('/login');
     } catch (error) {
       console.error('Error verifying email:', error);
     }
@@ -77,6 +92,7 @@ export default function RegisterForm() {
         layout="vertical"
         size="large"
         onFinish={handleRegister}
+        
       >
         <Form.Item
           label={<span className="font-semibold text-gray-700">Email</span>}

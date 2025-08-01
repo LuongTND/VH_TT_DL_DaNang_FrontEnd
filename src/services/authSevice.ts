@@ -1,5 +1,6 @@
 import axiosInstance from "@/configs/axios";
 
+    
 export const register = async (data: any) => {
     try {
         const response = await axiosInstance.post('/Auth/register', data);

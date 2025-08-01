@@ -46,11 +46,11 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="w-full max-w-md bg-white/90 backdrop-blur-sm shadow-xl rounded-lg border-t-4 border-blue-600 overflow-hidden">
-            <div className="p-6">
+        <div className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-xl rounded-lg border-t-4 border-blue-600 overflow-hidden">
+            <div className="p-4 sm:p-6">
                 {/* Card Header */}
                 <div className="flex flex-col items-center gap-2 mb-6">
-                    <div className="w-24 h-24 relative mb-2">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 relative mb-2">
                         <Image 
                             src="/images/logo.png" 
                             alt="Logo" 
@@ -58,7 +58,7 @@ export default function LoginForm() {
                             className="object-contain"
                         />
                     </div>
-                    <h1 className="text-2xl font-bold text-blue-800">Đăng Nhập</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-blue-800">Đăng Nhập</h1>
                 </div>
                 
                 {/* Form */}
@@ -75,10 +75,10 @@ export default function LoginForm() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Nhập tên đăng nhập"
-                                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
-                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email}</p>}
                     </div>
                     
                     <div className="space-y-2">
@@ -93,13 +93,13 @@ export default function LoginForm() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Nhập mật khẩu"
-                                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
-                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                        {errors.password && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>}
                     </div>
                     
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
                         <div className="flex items-center">
                             <input
                                 id="remember"
@@ -108,11 +108,11 @@ export default function LoginForm() {
                                 onChange={(e) => setRemember(e.target.checked)}
                                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                             />
-                            <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
+                            <label htmlFor="remember" className="ml-2 block text-xs sm:text-sm text-gray-700">
                                 Ghi nhớ đăng nhập
                             </label>
                         </div>
-                        <Link href="/forgot-password" className="text-blue-600 hover:text-blue-800 text-sm">
+                        <Link href="/forgot-password" className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm">
                             Quên mật khẩu?
                         </Link>
                     </div>
@@ -125,18 +125,18 @@ export default function LoginForm() {
                     </button>
                 </form>
                 
-                <div className="relative flex items-center justify-center mt-6 mb-6">
+                <div className="relative flex items-center justify-center mt-4 sm:mt-6 mb-4 sm:mb-6">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300"></div>
                     </div>
-                    <div className="relative flex justify-center text-sm">
+                    <div className="relative flex justify-center text-xs sm:text-sm">
                         <span className="px-2 bg-white text-gray-500">hoặc</span>
                     </div>
                 </div>
                 
                 <div className="text-center">
-                    <p className="text-gray-600 mb-2">Bạn chưa có tài khoản?</p>
-                    <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+                    <p className="text-gray-600 text-xs sm:text-sm mb-2">Bạn chưa có tài khoản?</p>
+                    <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm">
                         Đăng ký ngay
                     </Link>
                 </div>

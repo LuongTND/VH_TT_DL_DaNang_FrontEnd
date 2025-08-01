@@ -149,7 +149,7 @@ export default function RegisterForm() {
                 value={formValues.email}
                 onChange={handleInputChange}
                 placeholder="Nhập email"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.email && <p className="text-red-500 text-xs sm:text-sm">{errors.email}</p>}
@@ -169,7 +169,7 @@ export default function RegisterForm() {
                 value={formValues.password}
                 onChange={handleInputChange}
                 placeholder="Nhập mật khẩu"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.password && <p className="text-red-500 text-xs sm:text-sm">{errors.password}</p>}
@@ -189,7 +189,7 @@ export default function RegisterForm() {
                 value={formValues.nation}
                 onChange={handleInputChange}
                 placeholder="Nhập quốc gia"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.nation && <p className="text-red-500 text-xs sm:text-sm">{errors.nation}</p>}
@@ -209,7 +209,7 @@ export default function RegisterForm() {
                 value={formValues.businessName}
                 onChange={handleInputChange}
                 placeholder="Nhập tên doanh nghiệp"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.businessName && <p className="text-red-500 text-xs sm:text-sm">{errors.businessName}</p>}
@@ -229,7 +229,7 @@ export default function RegisterForm() {
                 value={formValues.industry}
                 onChange={handleInputChange}
                 placeholder="Nhập ngành nghề"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.industry && <p className="text-red-500 text-xs sm:text-sm">{errors.industry}</p>}
@@ -299,7 +299,7 @@ export default function RegisterForm() {
                 value={formValues.contactAccount}
                 onChange={handleInputChange}
                 placeholder="Nhập tài khoản liên hệ"
-                className="w-full pl-10 pr-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.contactAccount && <p className="text-red-500 text-xs sm:text-sm">{errors.contactAccount}</p>}

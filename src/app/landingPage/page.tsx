@@ -1,7 +1,6 @@
 'use client'
 import React from 'react';
 import { Layout, Button, theme } from 'antd';
-import CarouselComponent from './Components/Caousel';
 import MainContent from './Components/MainContent';
 import { useRouter } from 'next/navigation';
 import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined } from '@ant-design/icons';
@@ -80,15 +79,15 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </Header>
-      <Content className="px-12 py-6">
+      <Content>
         <div
-          className="p-6 rounded-lg flex flex-col"
+          className=" rounded-lg flex flex-col"
           style={{
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
         >
-          <CarouselComponent />
+          
           <MainContent />
         </div>
       </Content>

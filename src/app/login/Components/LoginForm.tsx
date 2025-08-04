@@ -30,13 +30,10 @@ export default function LoginForm() {
         if (!validateForm()) return;
 
         const values: LoginFormValues = { email, password };
-        console.log("Form submitted with values:", values);
         
         try {
             const response = await login(values);
-            console.log("Login response:", response);
             if (response.token) {
-                console.log('Login success, redirecting...');
                 localStorage.setItem('token', response.token);
                 router.push('/landingPage');
             }
@@ -112,7 +109,7 @@ export default function LoginForm() {
                                 Ghi nhớ đăng nhập
                             </label>
                         </div>
-                        <Link href="/forgot-password" className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm">
+                        <Link href="/fogotpassword" className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm">
                             Quên mật khẩu?
                         </Link>
                     </div>

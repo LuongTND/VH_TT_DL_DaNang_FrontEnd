@@ -1,51 +1,116 @@
 'use client'
 import React, { useState } from 'react';
-import { Card, Input, Form, Button, Divider, Radio } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
 import ModalOTP from './ModalOTP';
 import { register, verifyEmail } from '@/services/authSevice';
 import { useRouter } from 'next/navigation';
-
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 export default function RegisterForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [formValues, setFormValues] = useState({
+    email: '',
+    password: '',
+    nation: '',
+    businessName: '',
+    industry: '',
+    contactMethod: 'Email',
+    contactAccount: ''
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleRegister = async (values: any) => {
-    const payload = {
-      email: values.email,
-      password: values.password,
-      nation: values.nation,
-      businessName: values.businessName,
-      industry: values.industry,
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formValues.email) {
+      newErrors.email = 'Vui lòng nhập email!';
+    } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+      newErrors.email = 'Email không hợp lệ!';
+    }
+    
+    if (!formValues.password) {
+      newErrors.password = 'Vui lòng nhập mật khẩu!';
+    } else if (formValues.password.length < 8) {
+      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự!';
+    }
+    
+    if (!formValues.nation) newErrors.nation = 'Vui lòng nhập quốc gia!';
+    if (!formValues.businessName) newErrors.businessName = 'Vui lòng nhập tên doanh nghiệp!';
+    if (!formValues.industry) newErrors.industry = 'Vui lòng nhập ngành nghề!';
+    if (!formValues.contactMethod) newErrors.contactMethod = 'Vui lòng chọn phương thức liên hệ!';
+    if (!formValues.contactAccount) newErrors.contactAccount = 'Vui lòng nhập tài khoản liên hệ!';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormValues(prev => ({ ...prev, contactMethod: value }));
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    if (!validateForm()) return;
+    
+    type RegisterPayload = {
+      email: string;
+      password: string;
+      nation: string;
+      businessName: string;
+      industry: string;
+      contacts: {
+        method: string;
+        account: string;
+      }[];
+    };
+    
+    const payload: RegisterPayload = {
+      email: formValues.email,
+      password: formValues.password,
+      nation: formValues.nation,
+      businessName: formValues.businessName,
+      industry: formValues.industry,
       contacts: [
         {
-          method: values.contactMethod,
-          account: values.contactAccount,
+          method: formValues.contactMethod,
+          account: formValues.contactAccount,
         },
       ],
     };
 
     try {
       const response = await register(payload);
-      if (response.success) {
-        setEmail(values.email); // lưu để xác minh OTP
-        setIsModalOpen(true);
-      }
+      console.log('Đăng ký response:', response);
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error registering user:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleVerifyEmail = async (values: any) => {
+  interface VerifyEmailValues {
+    otp: string;
+  }
+
+  const handleVerifyEmail = async (values: VerifyEmailValues) => {
     try {
-      const response = await verifyEmail({ email, otp: values.otp });
-      if (response.success) {
-        setIsModalOpen(false);
-        router.push('/login');
-      }
+      console.log('Xác thực OTP với:', { email: formValues.email, otpCode: values.otp });
+      const response = await verifyEmail({ email: formValues.email, otpCode: values.otp });
+      console.log('Kết quả xác thực:', response);
+      
+      setIsModalOpen(false);
+      router.push('/login');
     } catch (error) {
       console.error('Error verifying email:', error);
     }
@@ -56,10 +121,11 @@ export default function RegisterForm() {
   };
 
   return (
-    <Card
-      title={
-        <div className="flex flex-col items-center gap-2">
-          <div className="w-24 h-24 relative mb-2 transform">
+    <div className="w-full max-w-md mx-auto bg-white/95 shadow-2xl rounded-xl border-t-4 border-blue-600 overflow-hidden">
+      <div className="p-4 sm:p-6">
+        {/* Header */}
+        <div className="flex flex-col items-center gap-2 mb-4 sm:mb-6">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 relative mb-2 transform">
             <Image
               src="/images/logo.png"
               alt="Logo"
@@ -67,135 +133,224 @@ export default function RegisterForm() {
               className="object-contain"
             />
           </div>
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">Đăng Ký</h1>
+          <h1 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">Đăng Ký</h1>
         </div>
-      }
-      className="w-full max-w-md bg-white/95 shadow-2xl rounded-xl border-t-4 border-blue-600 p-6 transition-all duration-300"
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        size="large"
-        onFinish={handleRegister}
-      >
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Email</span>}
-          name="email"
-          rules={[
-            { required: true, message: 'Vui lòng nhập email!' },
-            { type: 'email', message: 'Email không hợp lệ!' },
-          ]}
-        >
-          <Input
-            placeholder="Nhập email"
-            prefix={<i className="fas fa-envelope text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Mật Khẩu</span>}
-          name="password"
-          rules={[
-            { required: true, message: 'Vui lòng nhập mật khẩu!' },
-            { min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự!' },
-          ]}
-        >
-          <Input.Password
-            placeholder="Nhập mật khẩu"
-            prefix={<i className="fas fa-lock text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Quốc Gia</span>}
-          name="nation"
-          rules={[{ required: true, message: 'Vui lòng nhập quốc gia!' }]}
-        >
-          <Input
-            placeholder="Nhập quốc gia"
-            prefix={<i className="fas fa-globe text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Tên Doanh Nghiệp</span>}
-          name="businessName"
-          rules={[{ required: true, message: 'Vui lòng nhập tên doanh nghiệp!' }]}
-        >
-          <Input
-            placeholder="Nhập tên doanh nghiệp"
-            prefix={<i className="fas fa-building text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Ngành Nghề</span>}
-          name="industry"
-          rules={[{ required: true, message: 'Vui lòng nhập ngành nghề!' }]}
-        >
-          <Input
-            placeholder="Nhập ngành nghề"
-            prefix={<i className="fas fa-briefcase text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Phương Thức Liên Hệ</span>}
-          name="contactMethod"
-          rules={[{ required: true, message: 'Vui lòng chọn phương thức liên hệ!' }]}
-        >
-          <Radio.Group
-            className="rounded-lg flex flex-col gap-2"
-            options={[
-              { label: 'Email', value: 'Email' },
-              { label: 'Số Điện Thoại', value: 'Phone' },
-              { label: 'Zalo', value: 'Zalo' },
-            ]}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label={<span className="font-semibold text-gray-700">Tài Khoản Liên Hệ</span>}
-          name="contactAccount"
-          rules={[{ required: true, message: 'Vui lòng nhập tài khoản liên hệ!' }]}
-        >
-          <Input
-            placeholder="Nhập tài khoản liên hệ"
-            prefix={<i className="fas fa-id-card text-blue-500" />}
-            className="rounded-lg hover:border-blue-500 focus:border-blue-500 transition-colors duration-300"
-          />
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg font-medium text-base transition-all duration-300 shadow-md hover:shadow-lg"
+        
+        {/* Form */}
+        <form onSubmit={handleRegister} className="space-y-3 sm:space-y-4">
+          {/* Email */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="email" className="block font-semibold text-gray-700 text-sm sm:text-base">Email <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i className="fas fa-envelope text-blue-500"></i>
+              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formValues.email}
+                onChange={handleInputChange}
+                placeholder="Nhập email"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+            </div>
+            {errors.email && <p className="text-red-500 text-xs sm:text-sm">{errors.email}</p>}
+          </div>
+          
+          {/* Password */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="password" className="block font-semibold text-gray-700 text-sm sm:text-base">Mật Khẩu <span className="text-red-500">*</span></label>
+            <div className="relative">
+              
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={formValues.password}
+                onChange={handleInputChange}
+                placeholder="Nhập mật khẩu"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-black"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeInvisibleOutlined className="text-black text-base" />
+                ) : (
+                  <EyeTwoTone className="text-black text-base" />
+                )}
+              </div>
+            </div>
+            {errors.password && <p className="text-red-500 text-xs sm:text-sm">{errors.password}</p>}
+          </div>
+          
+          {/* Nation */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="nation" className="block font-semibold text-gray-700 text-sm sm:text-base">Quốc Gia <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i className="fas fa-globe text-blue-500"></i>
+              </div>
+              <input
+                id="nation"
+                name="nation"
+                type="text"
+                value={formValues.nation}
+                onChange={handleInputChange}
+                placeholder="Nhập quốc gia"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+            </div>
+            {errors.nation && <p className="text-red-500 text-xs sm:text-sm">{errors.nation}</p>}
+          </div>
+          
+          {/* Business Name */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="businessName" className="block font-semibold text-gray-700 text-sm sm:text-base">Tên Doanh Nghiệp <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i className="fas fa-building text-blue-500"></i>
+              </div>
+              <input
+                id="businessName"
+                name="businessName"
+                type="text"
+                value={formValues.businessName}
+                onChange={handleInputChange}
+                placeholder="Nhập tên doanh nghiệp"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+            </div>
+            {errors.businessName && <p className="text-red-500 text-xs sm:text-sm">{errors.businessName}</p>}
+          </div>
+          
+          {/* Industry */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="industry" className="block font-semibold text-gray-700 text-sm sm:text-base">Ngành Nghề <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i className="fas fa-briefcase text-blue-500"></i>
+              </div>
+              <input
+                id="industry"
+                name="industry"
+                type="text"
+                value={formValues.industry}
+                onChange={handleInputChange}
+                placeholder="Nhập ngành nghề"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+            </div>
+            {errors.industry && <p className="text-red-500 text-xs sm:text-sm">{errors.industry}</p>}
+          </div>
+          
+          {/* Contact Method */}
+          <div className="space-y-1 sm:space-y-2">
+            <label className="block font-semibold text-gray-700 text-sm sm:text-base">Phương Thức Liên Hệ <span className="text-red-500">*</span></label>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center">
+                <input
+                  id="email-radio"
+                  type="radio"
+                  name="contactMethod"
+                  value="Email"
+                  checked={formValues.contactMethod === 'Email'}
+                  onChange={() => handleRadioChange('Email')}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="email-radio" className="ml-2 block text-xs sm:text-sm text-gray-700">
+                  Email
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="phone-radio"
+                  type="radio"
+                  name="contactMethod"
+                  value="Phone"
+                  checked={formValues.contactMethod === 'Phone'}
+                  onChange={() => handleRadioChange('Phone')}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="phone-radio" className="ml-2 block text-xs sm:text-sm text-gray-700">
+                  Whatsapp
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="zalo-radio"
+                  type="radio"
+                  name="contactMethod"
+                  value="Zalo"
+                  checked={formValues.contactMethod === 'Zalo'}
+                  onChange={() => handleRadioChange('Zalo')}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <label htmlFor="zalo-radio" className="ml-2 block text-xs sm:text-sm text-gray-700">
+                  Zalo
+                </label>
+              </div>
+            </div>
+            {errors.contactMethod && <p className="text-red-500 text-xs sm:text-sm">{errors.contactMethod}</p>}
+          </div>
+          
+          {/* Contact Account */}
+          <div className="space-y-1 sm:space-y-2">
+            <label htmlFor="contactAccount" className="block font-semibold text-gray-700 text-sm sm:text-base">Tài Khoản Liên Hệ <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i className="fas fa-id-card text-blue-500"></i>
+              </div>
+              <input
+                id="contactAccount"
+                name="contactAccount"
+                type="text"
+                value={formValues.contactAccount}
+                onChange={handleInputChange}
+                placeholder="Nhập tài khoản liên hệ"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+              />
+            </div>
+            {errors.contactAccount && <p className="text-red-500 text-xs sm:text-sm">{errors.contactAccount}</p>}
+          </div>
+          
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full h-10 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base"
+            disabled={loading}
           >
-            Đăng Ký
-          </Button>
-        </Form.Item>
-
-        <Divider plain className="text-gray-400">hoặc</Divider>
-
+            {loading ? 'Đang đăng ký...' : 'Đăng Ký'}
+          </button>
+        </form>
+        
+        {/* Divider */}
+        <div className="relative flex items-center justify-center mt-4 sm:mt-6 mb-4 sm:mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-xs sm:text-sm">
+            <span className="px-2 bg-white text-gray-500">hoặc</span>
+          </div>
+        </div>
+        
+        {/* Login Link */}
         <div className="text-center">
-          <p className="text-gray-600 mb-2">Bạn đã có tài khoản?</p>
-          <Link href="/login" className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
+          <p className="text-gray-600 text-xs sm:text-sm mb-2">Bạn đã có tài khoản?</p>
+          <Link href="/login" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm transition-colors duration-300">
             Đăng nhập ngay
           </Link>
         </div>
-      </Form>
+      </div>
 
+      {/* OTP Modal */}
       <ModalOTP
         open={isModalOpen}
         onCancel={handleCancel}
         onSubmit={handleVerifyEmail}
       />
-    </Card>
+    </div>
   );
 }

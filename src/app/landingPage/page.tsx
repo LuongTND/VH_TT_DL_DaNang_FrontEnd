@@ -1,18 +1,24 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Layout, Button, Dropdown, Avatar, Drawer, Menu } from 'antd';
+import { Layout, Button, Dropdown, Avatar, Drawer, Menu, Badge, Tooltip, theme } from 'antd';
 import MainContent from './Components/MainContent';
 import { useRouter } from 'next/navigation';
-import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined, UserOutlined, MenuOutlined, CalendarOutlined, BellOutlined, LogoutOutlined } from '@ant-design/icons';
 import Image from 'next/image';
-
+import { logout } from '@/services/authSevice';
 const { Header, Content, Footer } = Layout;
 
 const LandingPage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  const [notificationCount] = useState(3);
+  const { token } = theme.useToken();
+  const handelLogout = async () => {
+    await logout();
+    setIsLoggedIn(false);
+    router.push('/login');
+  }
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -51,13 +57,19 @@ const LandingPage: React.FC = () => {
       label: 'Liên Hệ',
       icon: <ContactsOutlined />,
       path: '/contact'
+    },
+    {
+      key: '4',
+      label: 'Tạo Sự Kiện',
+      icon: <CalendarOutlined/>,
+      path: '/booking'
     }
   ];
 
   return (
     <Layout className="w-full min-h-screen">
-      <Header className="flex items-center px-4 md:px-6 gap-2 md:gap-4">
-        <div className="w-16 h-16 md:w-20 md:h-20">
+      <Header className="flex items-center px-4 md:px-6 gap-2 md:gap-4 sticky top-0 z-10 shadow-md" style={{ background: token.colorBgContainer }}>
+        <div className="w-16 h-16 md:w-20 md:h-20 hover:opacity-80 transition-opacity duration-300">
           <Image src="/images/logo.png" alt="logo" width={100} height={100} className="w-full h-full object-cover" />
         </div>
         <div className="flex-1 flex justify-between items-center">
@@ -78,31 +90,74 @@ const LandingPage: React.FC = () => {
               </div>
               <div>
                 {isLoggedIn ? (
-                  <Dropdown
-                    menu={{
-                      items: [
-                        { key: 'profile', label: 'Trang cá nhân' },
-                        { key: 'logout', label: 'Đăng xuất', onClick: () => {
-                          localStorage.removeItem('token');
-                          setIsLoggedIn(false);
-                          router.push('/login');
-                        } }
-                      ],
-                    }}
-                    placement="bottomRight"
-                    arrow
-                  >
-                    <Avatar size="large" icon={<UserOutlined />} className="cursor-pointer" />
-                  </Dropdown>
+                  <div className="flex items-center gap-4">
+                    <Tooltip title="Thông báo">
+                      <Badge count={notificationCount} size="small">
+                        <Button 
+                          type="text" 
+                          shape="circle" 
+                          icon={<BellOutlined style={{ fontSize: '18px' }} />} 
+                          className="flex items-center justify-center"
+                        />
+                      </Badge>
+                    </Tooltip>
+                    
+                    <Dropdown
+                      menu={{
+                        items: [
+                          { 
+                            key: 'profile', 
+                            label: 'Trang cá nhân',
+                            icon: <UserOutlined />
+                          },
+                          { 
+                            key: 'events', 
+                            label: 'Sự kiện của tôi',
+                            icon: <CalendarOutlined />
+                          },
+                          { 
+                            type: 'divider' 
+                          },
+                          { 
+                            key: 'logout', 
+                            label: 'Đăng xuất', 
+                            icon: <LogoutOutlined />,
+                            danger: true,
+                            onClick: () => {
+                              localStorage.removeItem('token');
+                              setIsLoggedIn(false);
+                              router.push('/login');
+                            } 
+                          }
+                        ],
+                      }}
+                      placement="bottomRight"
+                      arrow
+                    >
+                      <Avatar 
+                        size="large" 
+                        icon={<UserOutlined />} 
+                        className="cursor-pointer hover:opacity-80 transition-opacity duration-300" 
+                      />
+                    </Dropdown>
+                  </div>
                 ) : (
-                  <Button 
-                    type="primary" 
-                    onClick={() => router.push('/login')} 
-                    className="bg-black text-white rounded-lg px-3 md:px-5 py-1.5 md:py-2.5 text-sm md:text-base hover:bg-black hover:text-white"
-                  >
-                    <LoginOutlined />
-                    <span className="ml-1">Đăng Nhập</span>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => router.push('/register')} 
+                      className="rounded-lg px-3 md:px-5 py-1.5 md:py-2.5 text-sm md:text-base"
+                    >
+                      <span>Đăng ký</span>
+                    </Button>
+                    <Button 
+                      type="primary" 
+                      onClick={() => router.push('/login')} 
+                      className="bg-blue-600 text-white rounded-lg px-3 md:px-5 py-1.5 md:py-2.5 text-sm md:text-base hover:bg-blue-700 hover:text-white"
+                    >
+                      <LoginOutlined />
+                      <span className="ml-1">Đăng Nhập</span>
+                    </Button>
+                  </div>
                 )}
               </div>
             </>
@@ -145,12 +200,7 @@ const LandingPage: React.FC = () => {
                       <Menu.Item 
                         key="logout" 
                         icon={<LoginOutlined />}
-                        onClick={() => {
-                          localStorage.removeItem('token');
-                          setIsLoggedIn(false);
-                          router.push('/login');
-                          setDrawerVisible(false);
-                        }}
+                        onClick={handelLogout}
                       >
                         Đăng xuất
                       </Menu.Item>
@@ -178,8 +228,32 @@ const LandingPage: React.FC = () => {
           <MainContent />
         </div>
       </Content>
-      <Footer className="text-center py-4 md:py-6 text-sm md:text-base">
-        Sở Văn Hóa Thể Thao và Du Lịch Đà Nẵng   
+      <Footer className="text-center py-6 md:py-8 text-sm md:text-base bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-left">
+            <div>
+              <h3 className="font-bold text-lg mb-4">Về chúng tôi</h3>
+              <p className="text-gray-600">Sở Văn Hóa Thể Thao và Du Lịch Đà Nẵng</p>
+              <p className="text-gray-600 mt-2">Địa chỉ: 102 Lê Lợi, Hải Châu, Đà Nẵng</p>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-4">Liên hệ</h3>
+              <p className="text-gray-600">Email: contact@svhttdl.danang.gov.vn</p>
+              <p className="text-gray-600 mt-2">Điện thoại: (0236) 3830 246</p>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-4">Theo dõi chúng tôi</h3>
+              <div className="flex gap-4">
+                <a href="#" className="text-blue-600 hover:text-blue-800">Facebook</a>
+                <a href="#" className="text-blue-400 hover:text-blue-600">Twitter</a>
+                <a href="#" className="text-red-600 hover:text-red-800">YouTube</a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-300 pt-6">
+            <p className="text-gray-600">© {new Date().getFullYear()} Sở Văn Hóa Thể Thao và Du Lịch Đà Nẵng. Tất cả các quyền được bảo lưu.</p>
+          </div>
+        </div>
       </Footer>
     </Layout>
   );

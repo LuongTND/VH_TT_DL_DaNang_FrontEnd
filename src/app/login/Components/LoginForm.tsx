@@ -1,140 +1,159 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { login } from '@/services/authSevice';
 import { useRouter } from 'next/navigation';
-
+import { EyeInvisibleOutlined, EyeTwoTone, UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Checkbox, Alert, message } from 'antd';
 export default function LoginForm() {
     const router = useRouter();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [form] = Form.useForm();
     const [remember, setRemember] = useState(false);
-    const [errors, setErrors] = useState<{email?: string, password?: string}>({});
-
+    const [loading, setLoading] = useState(false);
+    const [loginError, setLoginError] = useState('');
     interface LoginFormValues {
         email: string;
         password: string;
     }
 
-    const validateForm = () => {
-        const newErrors: {email?: string, password?: string} = {};
-        if (!email) newErrors.email = 'Vui lòng nhập tên đăng nhập!';
-        if (!password) newErrors.password = 'Vui lòng nhập mật khẩu!';
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!validateForm()) return;
-
-        const values: LoginFormValues = { email, password };
-        
+    const handleLogin = async (values: LoginFormValues) => {
         try {
+            setLoading(true);
+            setLoginError('');
+            
             const response = await login(values);
             if (response.token) {
                 localStorage.setItem('token', response.token);
+                if (remember) {
+                    localStorage.setItem('rememberUser', 'true');
+                }
+                message.success('Đăng nhập thành công!');
                 router.push('/landingPage');
             }
         } catch (error) {
             console.error('Error logging in:', error);
+            setLoginError('Tên đăng nhập hoặc mật khẩu không chính xác');
+        } finally {
+            setLoading(false);
         }
     };
+    
+    useEffect(() => {
+        // Kiểm tra nếu người dùng đã lưu thông tin đăng nhập trước đó
+        const remembered = localStorage.getItem('rememberUser') === 'true';
+        if (remembered) {
+            setRemember(true);
+        }
+    }, []);
+
 
     return (
         <div className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-xl rounded-lg border-t-4 border-blue-600 overflow-hidden">
-            <div className="p-4 sm:p-6">
+            <div className="p-6 sm:p-8">
                 {/* Card Header */}
-                <div className="flex flex-col items-center gap-2 mb-6">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 relative mb-2">
+                <div className="flex flex-col items-center gap-2 mb-8">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 relative mb-4 hover:scale-105 transition-transform duration-300">
                         <Image 
                             src="/images/logo.png" 
                             alt="Logo" 
                             fill
                             className="object-contain"
+                            priority
                         />
                     </div>
                     <h1 className="text-xl sm:text-2xl font-bold text-blue-800">Đăng Nhập</h1>
+                    <p className="text-gray-500 text-sm text-center">Đăng nhập để trải nghiệm dịch vụ của chúng tôi</p>
                 </div>
                 
+                {loginError && (
+                    <Alert 
+                        message={loginError} 
+                        type="error" 
+                        showIcon 
+                        closable 
+                        className="mb-6" 
+                        onClose={() => setLoginError('')}
+                    />
+                )}
+                
                 {/* Form */}
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="block font-medium text-gray-700">Tên Đăng Nhập</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i className="fas fa-user text-gray-400"></i>
-                            </div>
-                            <input
-                                id="email"
-                                type="text"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Nhập tên đăng nhập"
-                                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email}</p>}
-                    </div>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="login_form"
+                    onFinish={handleLogin}
+                    className="space-y-4"
+                    initialValues={{ remember: remember }}
+                >
+                    <Form.Item
+                        name="email"
+                        label="Tên Đăng Nhập"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập tên đăng nhập!' },
+                        ]}
+                    >
+                        <Input 
+                            prefix={<UserOutlined className="text-gray-400" />} 
+                            placeholder="Nhập tên đăng nhập"
+                            size="large"
+                            className="rounded-md"
+                        />
+                    </Form.Item>
                     
-                    <div className="space-y-2">
-                        <label htmlFor="password" className="block font-medium text-gray-700">Mật Khẩu</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i className="fas fa-lock text-gray-400"></i>
-                            </div>
-                            <input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Nhập mật khẩu"
-                                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        {errors.password && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>}
-                    </div>
+                    <Form.Item
+                        name="password"
+                        label="Mật Khẩu"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                        ]}
+                    >
+                        <Input.Password 
+                            prefix={<LockOutlined className="text-gray-400" />}
+                            placeholder="Nhập mật khẩu"
+                            size="large"
+                            className="rounded-md"
+                            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                        />
+                    </Form.Item>
                     
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
-                        <div className="flex items-center">
-                            <input
-                                id="remember"
-                                type="checkbox"
-                                checked={remember}
-                                onChange={(e) => setRemember(e.target.checked)}
-                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                            />
-                            <label htmlFor="remember" className="ml-2 block text-xs sm:text-sm text-gray-700">
-                                Ghi nhớ đăng nhập
-                            </label>
-                        </div>
-                        <Link href="/fogotpassword" className="text-blue-600 hover:text-blue-800 text-xs sm:text-sm">
+                    <div className="flex justify-between items-center">
+                        <Form.Item name="remember" valuePropName="checked" noStyle>
+                            <Checkbox onChange={(e) => setRemember(e.target.checked)}>Ghi nhớ đăng nhập</Checkbox>
+                        </Form.Item>
+                        <Link href="/fogotpassword" className="text-blue-600 hover:text-blue-800 text-sm">
                             Quên mật khẩu?
                         </Link>
                     </div>
                     
-                    <button
-                        type="submit"
-                        className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                    >
-                        Đăng Nhập
-                    </button>
-                </form>
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="w-full h-12 bg-blue-600 hover:bg-blue-700 rounded-md"
+                            size="large"
+                            loading={loading}
+                        >
+                            {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
+                        </Button>
+                    </Form.Item>
+                </Form>
                 
-                <div className="relative flex items-center justify-center mt-4 sm:mt-6 mb-4 sm:mb-6">
+                <div className="relative flex items-center justify-center mt-8 mb-6">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-300"></div>
                     </div>
-                    <div className="relative flex justify-center text-xs sm:text-sm">
-                        <span className="px-2 bg-white text-gray-500">hoặc</span>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500">hoặc</span>
                     </div>
                 </div>
                 
                 <div className="text-center">
-                    <p className="text-gray-600 text-xs sm:text-sm mb-2">Bạn chưa có tài khoản?</p>
-                    <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium text-xs sm:text-sm">
-                        Đăng ký ngay
+                    <p className="text-gray-600 text-sm mb-3">Bạn chưa có tài khoản?</p>
+                    <Link href="/register" className="inline-block">
+                        <Button type="default" size="large" className="min-w-[180px] rounded-md hover:text-blue-600 hover:border-blue-600">
+                            Đăng ký ngay
+                        </Button>
                     </Link>
                 </div>
             </div>

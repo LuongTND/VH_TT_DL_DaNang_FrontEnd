@@ -105,10 +105,9 @@ export default function RegisterForm() {
 
   const handleVerifyEmail = async (values: VerifyEmailValues) => {
     try {
-      console.log('Xác thực OTP với:', { email: formValues.email, otpCode: values.otp });
-      const response = await verifyEmail({ email: formValues.email, otpCode: values.otp });
+      const response = await verifyEmail({ email: formValues.email, otpCode: values.otp })
+      console.log('Xác thực OTP với:', { email: formValues.email, otp: values.otp });
       console.log('Kết quả xác thực:', response);
-      
       setIsModalOpen(false);
       router.push('/login');
     } catch (error) {

@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "4343:4343"
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=4343
     restart: unless-stopped
     container_name: vh-tt-danang-frontend 

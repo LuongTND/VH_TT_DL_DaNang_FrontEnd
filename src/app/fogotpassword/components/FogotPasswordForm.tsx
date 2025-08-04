@@ -66,7 +66,11 @@ export default function FogotPasswordForm({
     const handleSubmit = async (values: ResetPasswordForm) => {
         try {
             setLoading(true);
-            const response = await resetPassword(values);
+            const response = await resetPassword({
+                email: values.email,
+                newPassword: values.newPassword,
+                otpCode: values.otpCode,
+            });
     
             // Xử lý phản hồi từ API
             if (response) {

@@ -1,8 +1,33 @@
 import axiosInstance from "@/configs/axios";
 
-
-    
-export const register = async (data: any) => {
+interface RegisterData {
+    email: string;
+    password: string;
+    nation: string;
+    businessName: string;
+    industry: string;
+    contacts: {
+        method: string;
+        account: string;
+    }[];
+}
+interface LoginData {
+    email: string;
+    password: string;
+}
+interface VerifyEmailData {
+    email: string;
+    otpCode: string;
+}
+interface SendEmailData {
+    email: string;
+}
+interface ResetPasswordData {
+    email: string;
+    otpCode: string;
+    newPassword: string;
+}
+export const register = async (data: RegisterData) => {
     try {
         const response = await axiosInstance.post('/Auth/register', data);
         console.log('response111111', response.data);
@@ -13,7 +38,7 @@ export const register = async (data: any) => {
     }
 }
 
-export const verifyEmail = async (data: any) => {
+export const verifyEmail = async (data: VerifyEmailData) => {
     try {
         const response = await axiosInstance.post('/Auth/verify-email', data);
         console.log('response', response.data);
@@ -24,7 +49,7 @@ export const verifyEmail = async (data: any) => {
     }
 }
 
-export const login = async (data: any) => {
+export const login = async (data: LoginData) => {
     try {
         const response = await axiosInstance.post('/Auth/login', data);
         if(response.data.accessToken){
@@ -38,7 +63,7 @@ export const login = async (data: any) => {
     }
 }
 
-export const sendEmail = async (data: any) => {
+export const sendEmail = async (data: SendEmailData) => {
     try {
         const response = await axiosInstance.post('/Auth/otp-reset-password', data);
         return response.data;
@@ -47,7 +72,7 @@ export const sendEmail = async (data: any) => {
         throw error;
     }
 }
-export const resetPassword = async (data: any) => {
+export const resetPassword = async (data: ResetPasswordData) => {
     try {
         const response = await axiosInstance.post('/Auth/reset-password', data);
         return response.data;

@@ -44,7 +44,7 @@ export default function ModalOTP({ open, onCancel, onSubmit }: ModalOTPProps) {
                             value={otpValue}
                             onChange={handleChange}
                             placeholder="Nhập mã OTP 6 số"
-                            className="w-full px-3 sm:px-4 py-2 sm:py-3 text-center text-base sm:text-lg font-medium tracking-widest border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 sm:px-4 text-black py-2 sm:py-3 text-center text-base sm:text-lg font-medium tracking-widest border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             maxLength={6}
                         />
                         <div className="flex justify-between w-full mt-2">

@@ -1,4 +1,5 @@
 import axiosInstance from "@/configs/axios";
+import ForgotPassword from './../app/fogotpassword/page';
 
     
 export const register = async (data: any) => {
@@ -29,6 +30,25 @@ export const login = async (data: any) => {
         return response.data;
     } catch (error) {
         console.error('Error logging in:', error);
+        throw error;
+    }
+}
+
+export const sendEmail = async (data: any) => {
+    try {
+        const response = await axiosInstance.post('/Auth/otp-reset-password', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw error;
+    }
+}
+export const resetPassword = async (data: any) => {
+    try {
+        const response = await axiosInstance.post('/Auth/reset-password', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error resetting password:', error);
         throw error;
     }
 }

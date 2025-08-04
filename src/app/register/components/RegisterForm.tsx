@@ -5,10 +5,11 @@ import Link from 'next/link';
 import ModalOTP from './ModalOTP';
 import { register, verifyEmail } from '@/services/authSevice';
 import { useRouter } from 'next/navigation';
-
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 export default function RegisterForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
@@ -19,7 +20,7 @@ export default function RegisterForm() {
     contactAccount: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-
+  const [showPassword, setShowPassword] = useState(false);
 
 
   const validateForm = () => {
@@ -58,7 +59,7 @@ export default function RegisterForm() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setLoading(true);
     if (!validateForm()) return;
     
     type RegisterPayload = {
@@ -93,6 +94,8 @@ export default function RegisterForm() {
       setIsModalOpen(true);
     } catch (error) {
       console.error('Error registering user:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,7 +140,7 @@ export default function RegisterForm() {
         <form onSubmit={handleRegister} className="space-y-3 sm:space-y-4">
           {/* Email */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="email" className="block font-semibold text-gray-700 text-sm sm:text-base">Email</label>
+            <label htmlFor="email" className="block font-semibold text-gray-700 text-sm sm:text-base">Email <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fas fa-envelope text-blue-500"></i>
@@ -149,7 +152,7 @@ export default function RegisterForm() {
                 value={formValues.email}
                 onChange={handleInputChange}
                 placeholder="Nhập email"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.email && <p className="text-red-500 text-xs sm:text-sm">{errors.email}</p>}
@@ -157,27 +160,35 @@ export default function RegisterForm() {
           
           {/* Password */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="password" className="block font-semibold text-gray-700 text-sm sm:text-base">Mật Khẩu</label>
+            <label htmlFor="password" className="block font-semibold text-gray-700 text-sm sm:text-base">Mật Khẩu <span className="text-red-500">*</span></label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i className="fas fa-lock text-blue-500"></i>
-              </div>
+              
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={formValues.password}
                 onChange={handleInputChange}
                 placeholder="Nhập mật khẩu"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-black"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeInvisibleOutlined className="text-black text-base" />
+                ) : (
+                  <EyeTwoTone className="text-black text-base" />
+                )}
+              </div>
             </div>
             {errors.password && <p className="text-red-500 text-xs sm:text-sm">{errors.password}</p>}
           </div>
           
           {/* Nation */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="nation" className="block font-semibold text-gray-700 text-sm sm:text-base">Quốc Gia</label>
+            <label htmlFor="nation" className="block font-semibold text-gray-700 text-sm sm:text-base">Quốc Gia <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fas fa-globe text-blue-500"></i>
@@ -189,7 +200,7 @@ export default function RegisterForm() {
                 value={formValues.nation}
                 onChange={handleInputChange}
                 placeholder="Nhập quốc gia"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.nation && <p className="text-red-500 text-xs sm:text-sm">{errors.nation}</p>}
@@ -197,7 +208,7 @@ export default function RegisterForm() {
           
           {/* Business Name */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="businessName" className="block font-semibold text-gray-700 text-sm sm:text-base">Tên Doanh Nghiệp</label>
+            <label htmlFor="businessName" className="block font-semibold text-gray-700 text-sm sm:text-base">Tên Doanh Nghiệp <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fas fa-building text-blue-500"></i>
@@ -209,7 +220,7 @@ export default function RegisterForm() {
                 value={formValues.businessName}
                 onChange={handleInputChange}
                 placeholder="Nhập tên doanh nghiệp"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.businessName && <p className="text-red-500 text-xs sm:text-sm">{errors.businessName}</p>}
@@ -217,7 +228,7 @@ export default function RegisterForm() {
           
           {/* Industry */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="industry" className="block font-semibold text-gray-700 text-sm sm:text-base">Ngành Nghề</label>
+            <label htmlFor="industry" className="block font-semibold text-gray-700 text-sm sm:text-base">Ngành Nghề <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fas fa-briefcase text-blue-500"></i>
@@ -229,7 +240,7 @@ export default function RegisterForm() {
                 value={formValues.industry}
                 onChange={handleInputChange}
                 placeholder="Nhập ngành nghề"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.industry && <p className="text-red-500 text-xs sm:text-sm">{errors.industry}</p>}
@@ -237,7 +248,7 @@ export default function RegisterForm() {
           
           {/* Contact Method */}
           <div className="space-y-1 sm:space-y-2">
-            <label className="block font-semibold text-gray-700 text-sm sm:text-base">Phương Thức Liên Hệ</label>
+            <label className="block font-semibold text-gray-700 text-sm sm:text-base">Phương Thức Liên Hệ <span className="text-red-500">*</span></label>
             <div className="flex flex-col gap-2">
               <div className="flex items-center">
                 <input
@@ -264,7 +275,7 @@ export default function RegisterForm() {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
                 <label htmlFor="phone-radio" className="ml-2 block text-xs sm:text-sm text-gray-700">
-                  Số Điện Thoại
+                  Whatsapp
                 </label>
               </div>
               <div className="flex items-center">
@@ -287,7 +298,7 @@ export default function RegisterForm() {
           
           {/* Contact Account */}
           <div className="space-y-1 sm:space-y-2">
-            <label htmlFor="contactAccount" className="block font-semibold text-gray-700 text-sm sm:text-base">Tài Khoản Liên Hệ</label>
+            <label htmlFor="contactAccount" className="block font-semibold text-gray-700 text-sm sm:text-base">Tài Khoản Liên Hệ <span className="text-red-500">*</span></label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i className="fas fa-id-card text-blue-500"></i>
@@ -299,7 +310,7 @@ export default function RegisterForm() {
                 value={formValues.contactAccount}
                 onChange={handleInputChange}
                 placeholder="Nhập tài khoản liên hệ"
-                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
+                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-500 transition-colors duration-300"
               />
             </div>
             {errors.contactAccount && <p className="text-red-500 text-xs sm:text-sm">{errors.contactAccount}</p>}
@@ -309,8 +320,9 @@ export default function RegisterForm() {
           <button
             type="submit"
             className="w-full h-10 sm:h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base"
+            disabled={loading}
           >
-            Đăng Ký
+            {loading ? 'Đang đăng ký...' : 'Đăng Ký'}
           </button>
         </form>
         

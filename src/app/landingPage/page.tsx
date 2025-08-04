@@ -3,16 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { Layout, Button, Dropdown, Avatar, Drawer, Menu } from 'antd';
 import MainContent from './Components/MainContent';
 import { useRouter } from 'next/navigation';
-import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
+import { HomeOutlined, InfoCircleOutlined, ContactsOutlined, LoginOutlined, UserOutlined, MenuOutlined, CalendarOutlined } from '@ant-design/icons';
 import Image from 'next/image';
-
+import { logout } from '@/services/authSevice';
 const { Header, Content, Footer } = Layout;
 
 const LandingPage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  const handelLogout = async () => {
+    await logout();
+    setIsLoggedIn(false);
+    router.push('/login');
+  }
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -51,6 +55,12 @@ const LandingPage: React.FC = () => {
       label: 'Liên Hệ',
       icon: <ContactsOutlined />,
       path: '/contact'
+    },
+    {
+      key: '4',
+      label: 'Tạo Sự Kiện',
+      icon: <CalendarOutlined/>,
+      path: '/booking'
     }
   ];
 
@@ -145,12 +155,7 @@ const LandingPage: React.FC = () => {
                       <Menu.Item 
                         key="logout" 
                         icon={<LoginOutlined />}
-                        onClick={() => {
-                          localStorage.removeItem('token');
-                          setIsLoggedIn(false);
-                          router.push('/login');
-                          setDrawerVisible(false);
-                        }}
+                        onClick={handelLogout}
                       >
                         Đăng xuất
                       </Menu.Item>

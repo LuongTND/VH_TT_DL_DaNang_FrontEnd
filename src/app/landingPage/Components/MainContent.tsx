@@ -1,8 +1,8 @@
 'use client'
 import Image from 'next/image'
 import { Badge, Button, Input, Card } from 'antd'
-import { SearchOutlined, ClockCircleOutlined, UserOutlined, StarOutlined } from '@ant-design/icons'
-
+import { SearchOutlined, ClockCircleOutlined, UserOutlined, StarOutlined, BgColorsOutlined,CustomerServiceOutlined, CameraOutlined, TrophyOutlined, PushpinOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons'
+import Link from 'next/link'
 import React from 'react'
 
 const MainContent = () => {
@@ -86,14 +86,14 @@ const MainContent = () => {
               <div className="px-3 sm:px-4 pb-3 sm:pb-4">
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 md:mb-4">
                   <div className="flex items-center gap-1">
-                    <ClockCircleOutlined />3 giờ
+                    <ClockCircleOutlined style={{ fontSize: '1em' }} />3 giờ
                   </div>
                   <div className="flex items-center gap-1">
-                    <UserOutlined />
+                    <UserOutlined style={{ fontSize: '1em' }} />
                     12 người
                   </div>
                   <div className="flex items-center gap-1">
-                    <StarOutlined className="text-yellow-400" />
+                    <StarOutlined style={{ fontSize: '1em', color: '#fadb14' }} />
                     4.9
                   </div>
                 </div>
@@ -120,15 +120,15 @@ const MainContent = () => {
               <div className="px-3 sm:px-4 pb-3 sm:pb-4">
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 md:mb-4">
                   <div className="flex items-center gap-1">
-                    <ClockCircleOutlined />
+                    <ClockCircleOutlined style={{ fontSize: '1em' }} />
                     2.5 giờ
                   </div>
                   <div className="flex items-center gap-1">
-                    <UserOutlined />
+                    <UserOutlined style={{ fontSize: '1em' }} />
                     15 người
                   </div>
                   <div className="flex items-center gap-1">
-                    <StarOutlined className="text-yellow-400" />
+                    <StarOutlined style={{ fontSize: '1em', color: '#fadb14' }} />
                     4.8
                   </div>
                 </div>
@@ -155,14 +155,14 @@ const MainContent = () => {
               <div className="px-3 sm:px-4 pb-3 sm:pb-4">
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 md:mb-4">
                   <div className="flex items-center gap-1">
-                    <ClockCircleOutlined />4 giờ
+                    <ClockCircleOutlined style={{ fontSize: '1em' }} />4 giờ
                   </div>
                   <div className="flex items-center gap-1">
-                    <UserOutlined />
+                    <UserOutlined style={{ fontSize: '1em' }} />
                     20 người
                   </div>
                   <div className="flex items-center gap-1">
-                    <StarOutlined className="text-yellow-400" />
+                    <StarOutlined style={{ fontSize: '1em', color: '#fadb14' }} />
                     4.7
                   </div>
                 </div>
@@ -188,6 +188,234 @@ const MainContent = () => {
           </div>
         </div>
       </section>
+      <section className="py-20 bg-gray-50">
+  <div className="container mx-auto px-4">
+    <div className="text-center mb-16">
+      <h2 className="text-4xl font-bold text-blue-900 mb-4">Danh Mục Workshop</h2>
+      <p className="text-xl text-gray-600">Khám phá đa dạng các chủ đề workshop phong phú</p>
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* Card 1 - Nghệ Thuật */}
+      <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer p-6">
+        <BgColorsOutlined style={{ fontSize: '2rem', color: '#fadb14' }} className="mb-4" />
+        <h3 className="font-semibold text-blue-900 mb-2">Nghệ Thuật</h3>
+        <p className="text-sm text-gray-600">25 workshop</p>
+      </Card>
+
+      {/* Card 2 - Âm Nhạc */}
+      <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer p-6">
+        <CustomerServiceOutlined style={{ fontSize: '2rem', color: '#52c41a' }} className="mb-4" />
+        <h3 className="font-semibold text-blue-900 mb-2">Âm Nhạc</h3>
+        <p className="text-sm text-gray-600">18 workshop</p>
+      </Card>
+
+      {/* Card 3 - Nhiếp Ảnh */}
+      <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer p-6">
+        <CameraOutlined style={{ fontSize: '2rem', color: '#1890ff' }} className="mb-4" />
+        <h3 className="font-semibold text-blue-900 mb-2">Nhiếp Ảnh</h3>
+        <p className="text-sm text-gray-600">12 workshop</p>
+      </Card>
+
+      {/* Card 4 - Thể Thao */}
+      <Card className="text-center hover:shadow-lg transition-shadow cursor-pointer p-6">
+        <TrophyOutlined style={{ fontSize: '2rem', color: '#f5222d' }} className="mb-4" />
+        <h3 className="font-semibold text-blue-900 mb-2">Thể Thao</h3>
+        <p className="text-sm text-gray-600">30 workshop</p>
+      </Card>
+    </div>
+  </div>
+</section>
+<section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-blue-900 mb-4">Cảm Nhận Của Khách Hàng</h2>
+            <p className="text-xl text-gray-600">Những trải nghiệm tuyệt vời từ người tham gia</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card>
+              
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <StarOutlined key={i} style={{ fontSize: '1.25rem', color: '#fadb14' }} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  &quot;Workshop làm bánh tráng rất thú vị! Tôi đã học được nhiều điều về văn hóa truyền thống Đà Nẵng.&quot;
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-blue-900 font-semibold">A</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-blue-900">Anh Minh</div>
+                    <div className="text-sm text-gray-600">TP. Hồ Chí Minh</div>
+                  </div>
+                </div>
+            
+            </Card>
+
+            <Card>
+              
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <StarOutlined key={i} style={{ fontSize: '1.25rem', color: '#fadb14' }} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                 &quot;Múa Chăm thật tuyệt vời! Các thầy cô rất nhiệt tình và chuyên nghiệp.&quot;
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-pink-900 font-semibold">L</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-blue-900">Chị Linh</div>
+                    <div className="text-sm text-gray-600">Hà Nội</div>
+                  </div>
+                </div>
+           
+            </Card>
+
+            <Card>
+              
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <StarOutlined key={i} style={{ fontSize: '1.25rem', color: '#fadb14' }} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  &quot;Workshop bóng chuyền bãi biển giúp tôi cải thiện kỹ năng và có những trải nghiệm tuyệt vời.&quot;
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-green-900 font-semibold">T</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-blue-900">Anh Tuấn</div>
+                    <div className="text-sm text-gray-600">Đà Nẵng</div>
+                  </div>
+                </div>
+              
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-6">Sẵn Sàng Khám Phá?</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-blue-100">
+            Đăng ký ngay để nhận thông tin về các workshop mới nhất và ưu đãi đặc biệt
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+            <Input
+              placeholder="Nhập email của bạn..."
+              className="bg-white/10 border-white/20 text-white placeholder:text-blue-200"
+            />
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 px-8">Đăng Ký</Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-blue-950 text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <span className="text-blue-900 font-bold">DN</span>
+                </div>
+                <div>
+                  <h3 className="font-bold">Sở VHTT&DL</h3>
+                  <p className="text-blue-200 text-sm">Đà Nẵng</p>
+                </div>
+              </div>
+              <p className="text-blue-200 mb-4">
+                Khám phá văn hóa Đà Nẵng qua các workshop độc đáo và trải nghiệm đáng nhớ.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Workshop</h4>
+              <ul className="space-y-2 text-blue-200">
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Văn Hóa Truyền Thống
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Nghệ Thuật
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Thể Thao
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Ẩm Thực
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Hỗ Trợ</h4>
+              <ul className="space-y-2 text-blue-200">
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Hướng Dẫn Đặt Chỗ
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Chính Sách Hủy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-yellow-300">
+                    Liên Hệ
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Liên Hệ</h4>
+              <div className="space-y-3 text-blue-200">
+                <div className="flex items-center gap-3">
+                  <PushpinOutlined style={{ fontSize: '1.25rem' }} />
+                  <span>76 Trần Phú, Hải Châu, Đà Nẵng</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <PhoneOutlined style={{ fontSize: '1.25rem' }} />
+                  <span>(0236) 3821 435</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MailOutlined style={{ fontSize: '1.25rem' }} />
+                  <span>  info@danangculture.gov.vn</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-blue-800 mt-12 pt-8 text-center text-blue-200">
+            <p>&copy; 2024 Sở Văn Hóa Thể Thao và Du Lịch Đà Nẵng. Tất cả quyền được bảo lưu.</p>
+          </div>
+        </div>
+      </footer>
+
     </>
   )
 }

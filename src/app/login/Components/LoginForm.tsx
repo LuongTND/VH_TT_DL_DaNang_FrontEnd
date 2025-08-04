@@ -4,14 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { login } from '@/services/authSevice';
 import { useRouter } from 'next/navigation';
-
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons'
 export default function LoginForm() {
     const router = useRouter();
     const [email, setEmail] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [password, setPassword] = useState('');
     const [remember, setRemember] = useState(false);
     const [errors, setErrors] = useState<{email?: string, password?: string}>({});
-
+    const [loading, setLoading] = useState(false);
     interface LoginFormValues {
         email: string;
         password: string;
@@ -32,6 +33,7 @@ export default function LoginForm() {
         const values: LoginFormValues = { email, password };
         
         try {
+            setLoading(true);
             const response = await login(values);
             if (response.token) {
                 localStorage.setItem('token', response.token);
@@ -39,8 +41,11 @@ export default function LoginForm() {
             }
         } catch (error) {
             console.error('Error logging in:', error);
-        }
+        } finally {
+            setLoading(false);
+            }
     };
+
 
     return (
         <div className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-sm shadow-xl rounded-lg border-t-4 border-blue-600 overflow-hidden">
@@ -61,7 +66,8 @@ export default function LoginForm() {
                 {/* Form */}
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                        <label htmlFor="email" className="block font-medium text-gray-700">Tên Đăng Nhập</label>
+                        
+                        <label htmlFor="email" className="block font-medium text-gray-700">Tên Đăng Nhập <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i className="fas fa-user text-gray-400"></i>
@@ -72,26 +78,38 @@ export default function LoginForm() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Nhập tên đăng nhập"
-                                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+
+                                
                             />
                         </div>
                         {errors.email && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email}</p>}
                     </div>
                     
                     <div className="space-y-2">
-                        <label htmlFor="password" className="block font-medium text-gray-700">Mật Khẩu</label>
+                        <label htmlFor="password" className="block font-medium text-gray-700">Mật Khẩu <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i className="fas fa-lock text-gray-400"></i>
                             </div>
                             <input
                                 id="password"
-                                type="password"
+                                type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Nhập mật khẩu"
-                                className="w-full pl-10 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-2 pr-3 py-2 text-sm  text-black sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
+                            <div
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-black"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? (
+                                    <EyeInvisibleOutlined className="text-black text-base" />
+                                ) : (
+                                    <EyeTwoTone className="text-black text-base" />
+                                )}
+                            </div>
                         </div>
                         {errors.password && <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>}
                     </div>
@@ -117,8 +135,9 @@ export default function LoginForm() {
                     <button
                         type="submit"
                         className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    
                     >
-                        Đăng Nhập
+                        {loading ? 'Đang đăng nhập...' : 'Đăng Nhập'}
                     </button>
                 </form>
                 

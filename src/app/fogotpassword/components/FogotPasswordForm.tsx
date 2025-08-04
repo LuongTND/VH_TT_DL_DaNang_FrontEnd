@@ -124,7 +124,7 @@ export default function FogotPasswordForm({
             maskClosable={false}
             keyboard={false}
             footer={null}
-            destroyOnClose={true}
+            destroyOnHidden={true}
             width={400}
             className="reset-password-modal"
             centered
@@ -132,7 +132,7 @@ export default function FogotPasswordForm({
             <Form form={form} layout="vertical" onFinish={handleSubmit} className="mt-4">
                 <Form.Item
                     name="email"
-                    label={<span className="font-medium">Email</span>}
+                    label={<span className="font-medium">Email <span className="text-red-500">*</span></span>}
                     rules={[{ required: true, message: 'Vui lòng nhập email' }]}
                 >
                     <Input 
@@ -146,7 +146,7 @@ export default function FogotPasswordForm({
 
                 <Form.Item
                     name="otpCode"
-                    label={<span className="font-medium">Mã OTP</span>}
+                    label={<span className="font-medium">Mã OTP <span className="text-red-500">*</span></span>}
                     rules={[{ required: true, message: 'Vui lòng nhập mã OTP' }]}
                     extra={<span className="text-xs text-gray-500">Mã OTP đã được gửi đến email của bạn</span>}
                 >
@@ -159,7 +159,7 @@ export default function FogotPasswordForm({
 
                 <Form.Item
                     name="newPassword"
-                    label={<span className="font-medium">Mật khẩu mới</span>}
+                    label={<span className="font-medium">Mật khẩu mới <span className="text-red-500">*</span></span>}
                     rules={[
                         { required: true, message: 'Vui lòng nhập mật khẩu mới' },
                         { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự' }

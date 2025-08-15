@@ -42,33 +42,33 @@ const LandingPage: React.FC = () => {
   const navItems = [
     {
       key: '1',
-      icon: <HomeOutlined />,
+      icon: <HomeOutlined className="!text-white" />,
       label: 'Trang Chủ',
       path: '/'
     },
     {
       key: '2',
       label: 'Giới Thiệu',
-      icon: <InfoCircleOutlined />,
+      icon: <InfoCircleOutlined className="!text-white" />,
       path: '/about'    
     },
     {
       key: '3',
       label: 'Liên Hệ',
-      icon: <ContactsOutlined />,
+      icon: <ContactsOutlined className="!text-white" />,
       path: '/contact'
     },
     {
       key: '4',
-      label: 'Tạo Sự Kiện',
-      icon: <CalendarOutlined/>,
+      label: 'Tạo Workshop',
+      icon: <CalendarOutlined className="!text-white" />,
       path: '/booking'
     }
   ];
 
   return (
     <Layout className="w-full min-h-screen">
-      <Header className="flex items-center px-4 md:px-6 gap-2 md:gap-4 sticky top-0 z-10 shadow-md" style={{ background: token.colorBgContainer }}>
+      <Header className="flex items-center  px-4 md:px-6 gap-2 md:gap-4 sticky top-0 z-10 shadow-md !bg-[#22168d]">
         <div className="w-16 h-16 md:w-20 md:h-20 hover:opacity-80 transition-opacity duration-300">
           <Image src="/images/logo.png" alt="logo" width={100} height={100} className="w-full h-full object-cover" />
         </div>
@@ -79,12 +79,13 @@ const LandingPage: React.FC = () => {
                 {navItems.map((item) => (
                   <Button 
                     key={item.key}
-                    type={item.key === '1' ? 'primary' : 'default'}
+                    type="text"
+                    shape="circle"
                     onClick={() => router.push(item.path)}
                     className={`font-medium bg-black text-white rounded-lg px-3 md:px-5 py-1.5 md:py-2.5 text-sm md:text-base hover:bg-black hover:text-white`}
                   >
-                    {item.icon}
-                    <span className="ml-1">{item.label}</span>
+                     {item.icon }
+                    <span className="ml-1 text-white !border-none !shadow-none hover:!border-none">{item.label}</span>
                   </Button>
                 ))}
               </div>
@@ -92,11 +93,11 @@ const LandingPage: React.FC = () => {
                 {isLoggedIn ? (
                   <div className="flex items-center gap-4">
                     <Tooltip title="Thông báo">
-                      <Badge count={notificationCount} size="small">
+                      <Badge count={notificationCount}  size="small">
                         <Button 
                           type="text" 
                           shape="circle" 
-                          icon={<BellOutlined style={{ fontSize: '18px' }} />} 
+                          icon={<BellOutlined style={{ fontSize: '18px', color: 'white' }} />} 
                           className="flex items-center justify-center"
                         />
                       </Badge>

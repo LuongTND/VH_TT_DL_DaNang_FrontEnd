@@ -2,13 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState} from "react"
 import { Button, Card, Form, Input, DatePicker, TimePicker, Typography, Space, Upload as AntUpload, notification, Steps } from "antd"
-import { UploadOutlined, CalendarOutlined, CloseOutlined, EnvironmentOutlined, ClockCircleOutlined, FileTextOutlined, PictureOutlined, CheckCircleOutlined } from "@ant-design/icons"
+import { UploadOutlined, CalendarOutlined, CloseOutlined, ArrowLeftOutlined, EnvironmentOutlined, ClockCircleOutlined, FileTextOutlined, PictureOutlined, CheckCircleOutlined } from "@ant-design/icons"
 import Image from "next/image"
 import dayjs from "dayjs"
+import { useRouter } from "next/navigation"
 
 export default function EventCreationForm() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
     startDate: undefined as Date | undefined,
@@ -23,6 +25,9 @@ export default function EventCreationForm() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [form] = Form.useForm()
+const handleback = () => {
+  router.push("/")
+}
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -109,11 +114,11 @@ export default function EventCreationForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
+      <Button onClick={handleback} icon={<ArrowLeftOutlined />} className="justify-start rounded-full"></Button>
+        <div className="text-center  mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Tạo Sự Kiện Mới</h1>
           <p className="text-gray-600">Điền thông tin chi tiết để tạo sự kiện của bạn</p>
         </div>
-
         <Card className="shadow-xl border-0">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-t-lg">
             <Typography.Title level={4} className="text-white flex items-center gap-2 m-0">
